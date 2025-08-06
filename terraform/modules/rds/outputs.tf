@@ -1,15 +1,7 @@
-variable "vpc_id" {
-  type = string
+output "rds_endpoint" {
+  value = aws_db_instance.employee_db.endpoint
 }
 
-variable "private_subnet_ids" {
-  type = list(string)
-}
-
-variable "db_username" {
-  type = string
-}
-
-variable "db_password" {
-  type = string
+output "rds_secret_arn" {
+  value = aws_secretsmanager_secret.db_credentials.arn
 }
