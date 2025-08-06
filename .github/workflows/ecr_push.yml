@@ -1,19 +1,12 @@
 name: Build and Push Docker Images to ECR
 
-# on:
-#   push:
-#     branches: [ main ]  # or your deployment branch
-#     paths:
-#       - 'frontend/**'
-#       - 'backend/**'
-#       - '.github/workflows/ecr_push.yml'
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger from GitHub UI
 
 permissions:
   id-token: write
   contents: read
-  
+
 env:
   AWS_REGION: us-east-1
   ECR_REGISTRY: 082041771564.dkr.ecr.us-east-1.amazonaws.com
@@ -23,10 +16,6 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
       - name: Checkout code
