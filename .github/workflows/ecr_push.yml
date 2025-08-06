@@ -1,7 +1,7 @@
-name: Build and Push Docker Images to ECR
+name: Create ECR Repos via Terraform and Push Docker Images
 
 on:
-  workflow_dispatch:  # Manual trigger from GitHub UI
+  workflow_dispatch:  # Manual trigger
 
 permissions:
   id-token: write
@@ -9,12 +9,13 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REGISTRY: 082041771564.dkr.ecr.us-east-1.amazonaws.com
+  ACCOUNT_ID: 082041771564
   FRONTEND_REPO: employee-frontend
   BACKEND_REPO: employee-backend
+  ECR_REGISTRY: 082041771564.dkr.ecr.us-east-1.amazonaws.com
 
 jobs:
-  build-and-push:
+  terraform-ecr-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +27,17 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::082041771564:role/github-actions-oidc-role-prod
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Initialize Terraform
+        working-directory: terraform/environments/dev
+        run: terraform init
+
+      - name: Apply Terraform (ECR only)
+        working-directory: terraform/environments/dev
+        run: terraform apply -target=module.ecr -auto-approve
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
