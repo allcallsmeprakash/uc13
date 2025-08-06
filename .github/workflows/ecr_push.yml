@@ -33,7 +33,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: terraform/environments/dev
-        run: terraform init
+        run: terraform init -upgrade
 
       - name: Apply Terraform (ECR only)
         working-directory: terraform/environments/dev
