@@ -1,16 +1,22 @@
 name: Build and Push Docker Images to ECR
 
+# on:
+#   push:
+#     branches: [ main ]  # or your deployment branch
+#     paths:
+#       - 'frontend/**'
+#       - 'backend/**'
+#       - '.github/workflows/ecr_push.yml'
 on:
-  push:
-    branches: [ main ]  # or your deployment branch
-    paths:
-      - 'frontend/**'
-      - 'backend/**'
-      - '.github/workflows/docker-ecr-deploy.yml'
+  workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+  
 env:
-  AWS_REGION: us-west-2
-  ECR_REGISTRY: 082041771564.dkr.ecr.us-west-2.amazonaws.com
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: 082041771564.dkr.ecr.us-east-1.amazonaws.com
   FRONTEND_REPO: employee-frontend
   BACKEND_REPO: employee-backend
 
@@ -29,7 +35,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsDeployRole
+          role-to-assume: arn:aws:iam::082041771564:role/github-actions-oidc-role-prod
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
