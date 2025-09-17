@@ -1,0 +1,32 @@
+name: Create ECR Repos via Terraform and Push Docker Images
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+  ACCOUNT_ID: 082041771564
+  FRONTEND_REPO: employee-frontend
+  BACKEND_REPO: employee-backend
+  ECR_REGISTRY: 082041771564.dkr.ecr.us-east-1.amazonaws.com
+
+jobs:
+  terraform-ecr-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::082041771564:role/github-actions-oidc-role-prod
+          aws-region: ${{ env.AWS_REGION }}
+
+      $BACKEND_REPO:latest $ECR_REGISTRY/$BACKEND_REPO:latest
+          docker push $ECR_REGISTRY/$BACKEND_REPO:latest
