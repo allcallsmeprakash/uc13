@@ -27,6 +27,3 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::082041771564:role/github-actions-oidc-role-prod
           aws-region: ${{ env.AWS_REGION }}
-
-      $BACKEND_REPO:latest $ECR_REGISTRY/$BACKEND_REPO:latest
-          docker push $ECR_REGISTRY/$BACKEND_REPO:latest
